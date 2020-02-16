@@ -1,5 +1,8 @@
 package com.lse.admin.aws;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,19 +52,19 @@ public final class ConnectToLedger {
     return driver.getSession();
   }
 
-  public static String listTables() {
-    StringBuilder builder = new StringBuilder();
+  public static List<String> listTables() {
+    List<String> tableNames = new ArrayList<>();
     try (QldbSession qldbSession = createQldbSession()) {
       log.info("Listing table names ");
       for (String tableName : qldbSession.getTableNames()) {
-        builder.append(tableName);
-        builder.append("\n");
+        tableNames.add(tableName);
       }
     } catch (QldbClientException e) {
       log.error("Unable to create session.", e);
     }
-    return builder.toString();
+    return tableNames;
   }
+  
 
   public static void main(final String... args) {
     try (QldbSession qldbSession = createQldbSession()) {
