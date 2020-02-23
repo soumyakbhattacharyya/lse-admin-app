@@ -1,0 +1,8 @@
+1) register new product
+2) update sales information for a product
+3) get stock
+4) get financial report
+
+optional
+- get customer detail
+- get supplier detail

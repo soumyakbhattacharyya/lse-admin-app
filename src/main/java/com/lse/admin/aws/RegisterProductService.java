@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +15,9 @@ import com.lse.admin.model.Product;
 import software.amazon.qldb.QldbSession;
 import software.amazon.qldb.TransactionExecutor;
 
-public class RegisterProduct {
+public class RegisterProductService {
 
-  public static final Logger log = LoggerFactory.getLogger(RegisterProduct.class);
+  public static final Logger log = LoggerFactory.getLogger(RegisterProductService.class);
 
   public static List<String> insertDocuments(final TransactionExecutor txn, final String tableName, final Object document) {
     log.info("Inserting some documents in the {} table...", tableName);
@@ -42,6 +43,16 @@ public class RegisterProduct {
     } catch (Exception e) {
       log.error("Error inserting or updating documents.", e);
     }
+  }
+
+  public static void execute(List<Product> product) {
+    product.stream().forEach(new Consumer<Product>() {
+
+      @Override
+      public void accept(Product t) {
+        execute(t);
+      }
+    });
   }
 
 }
