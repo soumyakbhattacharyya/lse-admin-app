@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -28,6 +29,8 @@ import com.lse.admin.skin.ShellHelper;
 @ShellComponent
 public class RegisterProduct {
 
+  private static final String INVENTORY = "Inventory";
+
   @Autowired
   ShellHelper shellHelper;
 
@@ -46,10 +49,14 @@ public class RegisterProduct {
     do {
       String inputDirName = inputReader.prompt("Input directory");
       if (StringUtils.hasText(inputDirName)) {
-        shellHelper.printSuccess("name for input directory received");
+        log.info("Input directory received as : " + inputDirName);
         inputDirToReadFrom = inputDirName;
       } else {
-        shellHelper.printWarning("Input directory unknown? Please enter valid input directory!");
+        log.info("No input received from user, assuming current directory as working directory.");
+        String currentWorkingDirectory = System.getProperty("user.dir");
+        log.info("Input directory assumed to be : " + currentWorkingDirectory);
+        inputDirToReadFrom = currentWorkingDirectory;
+        break;
       }
     } while (inputDirToReadFrom == null);
 
@@ -57,23 +64,27 @@ public class RegisterProduct {
     do {
       String fileName = inputReader.prompt("File name");
       if (StringUtils.hasText(fileName)) {
-        shellHelper.printSuccess("file name received");
+        log.info("file name received");
         fileToReadFrom = fileName;
       } else {
-        shellHelper.printWarning("File name unknown? Please enter valid file name!");
+        log.info("File name not received, default name received.");
+        fileToReadFrom = "product-detail.xlsx";
       }
     } while (fileToReadFrom == null);
 
-    try (FileInputStream file = new FileInputStream(new File(fileToReadFrom)); Workbook workbook = new XSSFWorkbook(file)) {
+    String productFile = String.join("/", new String[] { inputDirToReadFrom, fileToReadFrom });
+    log.info("Reading following file: " + productFile);
+
+    try (FileInputStream file = new FileInputStream(new File(productFile)); Workbook workbook = new XSSFWorkbook(file)) {
 
       Sheet sheet = workbook.getSheetAt(0);
-      if (null != sheet & "Inventory".equalsIgnoreCase(sheet.getSheetName())) {
+      if (null != sheet & INVENTORY.equalsIgnoreCase(sheet.getSheetName())) {
 
         List<Product> product = ProductFactory.THIS.from(sheet);
         shellHelper.printSuccess("finished reading products from excel sheet");
         RegisterProductService.execute(product);
         shellHelper.printSuccess("successfully created records");
-     }
+      }
 
     } catch (IOException e) {
       e.printStackTrace();

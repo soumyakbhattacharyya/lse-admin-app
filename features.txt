@@ -1,4 +1,4 @@
-1) register new product
+1) register new product [done]
 2) update sales information for a product
 3) get stock
 4) get financial report
