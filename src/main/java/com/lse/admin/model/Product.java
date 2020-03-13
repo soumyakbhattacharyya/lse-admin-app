@@ -68,11 +68,15 @@ public class Product {
    * price at which the product has been sold
    */
   private double soldAt;
-  
+
+  private double fifteenPercentDiscount;
+  private double twentyFivePercentDiscount;
+  private double thirtyPercentDiscount;
+
   private double numberOfInstallments;
 
   private double currentInstallmentNumber;
-  
+
   private double currentInstallmentAmount;
 
   private double recoveredAmount;
@@ -93,7 +97,8 @@ public class Product {
 
   private double coreGroupMemberContributionComponentFromProfit;
 
-  public Product(String id, int code, String type, String description, double buyUnitPrice, double suggestedUnitPrice) {
+  public Product(String id, int code, String type, String description, double buyUnitPrice, double suggestedUnitPrice, double fifteenPercentDiscount,
+      double twentyFivePercentDiscount, double thirtyPercentDiscount) {
     super();
     this.id = id;
     this.code = code;
@@ -101,6 +106,9 @@ public class Product {
     this.description = description;
     this.buyUnitPrice = buyUnitPrice;
     this.suggestedUnitPrice = suggestedUnitPrice;
+    this.fifteenPercentDiscount = fifteenPercentDiscount;
+    this.twentyFivePercentDiscount = twentyFivePercentDiscount;
+    this.thirtyPercentDiscount = thirtyPercentDiscount;
   }
 
 }

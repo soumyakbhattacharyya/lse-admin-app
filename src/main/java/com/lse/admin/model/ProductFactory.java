@@ -45,6 +45,9 @@ public final class ProductFactory {
         String description = "";
         double buyUnitPrice = 0;
         double suggestedUnitPrice = 0;
+        double fifteenPercentDiscount = 0;
+        double twentyFivePercentDiscount = 0;
+        double thirtyPercentDiscount = 0;
 
         System.out.println("row number " + currentRow.getRowNum());
         while (cellIterator.hasNext()) {
@@ -71,7 +74,10 @@ public final class ProductFactory {
         }
 
         if (code != 0) {
-          Product product = new Product(id, code, type, description, buyUnitPrice, suggestedUnitPrice);
+          fifteenPercentDiscount = suggestedUnitPrice - (0.15 * suggestedUnitPrice);
+          twentyFivePercentDiscount = suggestedUnitPrice - (0.25 * suggestedUnitPrice);
+          thirtyPercentDiscount = suggestedUnitPrice - (0.4 * suggestedUnitPrice);
+          Product product = new Product(id, code, type, description, buyUnitPrice, suggestedUnitPrice, fifteenPercentDiscount, twentyFivePercentDiscount, thirtyPercentDiscount);
           products.add(product);
         }
 
