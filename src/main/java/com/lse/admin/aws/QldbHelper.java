@@ -6,10 +6,12 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.amazon.ion.Decimal;
 import com.amazon.ion.IonString;
@@ -23,6 +25,8 @@ import software.amazon.qldb.Result;
 import software.amazon.qldb.TransactionExecutor;
 
 public class QldbHelper {
+
+  public static final Logger log = LoggerFactory.getLogger(FindStockService.class);
 
   public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -161,35 +165,24 @@ public class QldbHelper {
     return Decimal.valueOf(num);
   }
 
-  // /**
-  // * Return a copy of the given driver's license with updated person Id.
-  // *
-  // * @param oldLicense
-  // * The old driver's license to update.
-  // * @param personId
-  // * The PersonId of the driver.
-  // * @return the updated {@link DriversLicense}.
-  // */
-  // public static DriversLicense updatePersonIdDriversLicense(final DriversLicense oldLicense, final String personId) {
-  // return new DriversLicense(personId, oldLicense.getLicenseNumber(), oldLicense.getLicenseType(),
-  // oldLicense.getValidFromDate(), oldLicense.getValidToDate());
-  // }
-  //
-  // /**
-  // * Return a copy of the given vehicle registration with updated person Id.
-  // *
-  // * @param oldRegistration
-  // * The old vehicle registration to update.
-  // * @param personId
-  // * The PersonId of the driver.
-  // * @return the updated {@link VehicleRegistration}.
-  // */
-  // public static VehicleRegistration updateOwnerVehicleRegistration(final VehicleRegistration oldRegistration,
-  // final String personId) {
-  // return new VehicleRegistration(oldRegistration.getVin(), oldRegistration.getLicensePlateNumber(),
-  // oldRegistration.getState(), oldRegistration.getCity(), oldRegistration.getPendingPenaltyTicketAmount(),
-  // oldRegistration.getValidFromDate(), oldRegistration.getValidToDate(),
-  // new Owners(new Owner(personId), Collections.emptyList()));
-  // }
+  /**
+   * Pretty print all elements in the provided {@link Result}.
+   *
+   * @param result
+   *          {@link Result} from executing a query.
+   */
+  public static void printDocuments(final Result result) {
+    result.iterator().forEachRemaining(row -> log.info(row.toPrettyString()));
+  }
+
+  /**
+   * Pretty print all elements in the provided list of {@link IonStruct}.
+   *
+   * @param documents
+   *          List of documents to print.
+   */
+  public static void printDocuments(final List<IonStruct> documents) {
+    documents.forEach(row -> log.info(row.toPrettyString()));
+  }
 
 }
